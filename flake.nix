@@ -4,19 +4,7 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
 
-    # haskellNix = {
-    #   follows = "plutus-apps/haskell-nix";
-    #   # workaround for nix 2.6.0 bug
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
-    # nixpkgs.follows = "plutus-apps/nixpkgs";
-
-    plutus-apps = {
-      url = "github:input-output-hk/plutus-apps/plutus-starter-devcontainer/v1.0.14";
-      # it does have a flake.nix file, but it is of limited use to us
-      # flake = false;
-    };
+    plutus-apps.url = "github:input-output-hk/plutus-apps/plutus-starter-devcontainer/v1.0.14";
 
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
   };
@@ -65,8 +53,10 @@
             # type = "app";
             # program = "${flake.packages."plutus-hello:exe:plutus-hello"}/bin/plutus-hello";
 
-            type = "app";
-            program = "${update-materialized}/bin/update-materialized";
+            update-materialized = {
+              type = "app";
+              program = "${update-materialized}/bin/update-materialized";
+            };
           };
 
           devShell =
