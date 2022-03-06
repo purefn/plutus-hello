@@ -42,6 +42,7 @@
 
             git ls-files | grep -v ^nix/haskell/materialized | grep .nix$ | xargs nixpkgs-fmt
             git ls-files | grep .hs$ | xargs brittany --write-mode inplace --config-file ${./brittany.yaml}
+            git ls-files | grep .cabal$ | xargs cabal-fmt --inplace
           '';
         in
         pkgs.lib.recursiveUpdate flake {
