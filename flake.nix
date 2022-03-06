@@ -34,6 +34,15 @@
             mkdir -p nix/haskell/materialized
             ${project.plan-nix.passthru.generateMaterialized} nix/haskell/materialized
           '';
+
+          format = pkgs.writeShellScriptBin "format" ''
+            set -euo pipefail
+
+            PATH="${pkgs.lib.makeBinPath (with pkgs; [ git gnugrep findutils ] ++ pre-commit.shellBuildInputs)}"
+
+            git ls-files | grep -v ^nix/haskell/materialized | grep .nix$ | xargs nixpkgs-fmt
+            git ls-files | grep .hs$ | xargs brittany --write-mode inplace --config-file ${./brittany.yaml}
+          '';
         in
         pkgs.lib.recursiveUpdate flake {
           checks = {
@@ -56,6 +65,11 @@
             update-materialized = {
               type = "app";
               program = "${update-materialized}/bin/update-materialized";
+            };
+
+            format = {
+              type = "app";
+              program = "${format}/bin/format";
             };
           };
 
